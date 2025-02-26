@@ -1,0 +1,1 @@
+{"name":"autofinder","version":"1.0.0","description":"A Node.js project for finding automation tasks.","main":"backend/server.js","scripts":{"start":"node backend/server.js"},"author":"Anderson","license":"ISC","dependencies":{"axios":"^1.4.0","cors":"^2.8.5","dotenv":"^16.0.3","express":"^4.21.2","mongoose":"^7.8.6","openai":"^4.0.0","package.json":"^2.0.1"}}

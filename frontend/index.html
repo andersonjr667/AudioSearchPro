@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AudioSearch Pro - O melhor buscador de áudios">
+    <link rel="stylesheet" href="styles.css">
+    <title>AudioSearch Pro - Buscador de Áudios</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* ====== ESTILOS DA SEÇÃO DE BUSCA ====== */
+        #search {
+            background: rgba(0, 255, 127, 0.05);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 50px auto;
+            max-width: 800px;
+            box-shadow: 0 8px 32px rgba(0, 255, 127, 0.1);
+            border: 1px solid rgba(0, 255, 127, 0.1);
+        }
+
+        .search-tabs {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 12px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .tab-btn.active {
+            background: var(--primary-color);
+            color: var(--background-dark);
+            box-shadow: 0 0 15px var(--primary-color);
+        }
+
+        .tab-btn:hover:not(.active) {
+            background: rgba(0, 255, 127, 0.1);
+        }
+
+        .search-input-container {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        #searchInput {
+            width: 100%;
+            padding: 18px 60px 18px 30px;
+            border-radius: 50px;
+            border: 2px solid var(--primary-color);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-light);
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        #searchInput:focus {
+            outline: none;
+            box-shadow: 0 0 25px var(--primary-color);
+        }
+
+        .voice-search-btn {
+            position: absolute;
+            right: 25px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            font-size: 1.4rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .voice-search-btn:hover {
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .search-filters {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        .search-filters select {
+            padding: 12px 20px;
+            border-radius: 30px;
+            border: 2px solid var(--primary-color);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-filters select:hover {
+            background: rgba(0, 255, 127, 0.1);
+        }
+
+        .search-btn {
+            width: 100%;
+            padding: 18px;
+            border-radius: 50px;
+            background: var(--primary-color);
+            color: var(--background-dark);
+            border: none;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 25px;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px var(--primary-color);
+        }
+
+        @media (max-width: 768px) {
+            #search {
+                padding: 25px;
+                margin: 30px 15px;
+            }
+            
+            .search-tabs {
+                flex-wrap: wrap;
+            }
+            
+            .search-filters {
+                flex-direction: column;
+            }
+            
+            .search-btn {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo-container">
+                    <img src="Images/Logo.png" alt="AudioFinder Logo" class="logo-img">
+                </div>
+                <div class="nav-links">
+                    <a href="#search" class="nav-link"><i class="fas fa-search"></i> Procurar Áudio</a>
+                    <a href="#trending" class="nav-link"><i class="fas fa-chart-line"></i> Tendências</a>
+                    <a href="#categories" class="nav-link"><i class="fas fa-list"></i> Categorias</a>
+                    <a href="#about" class="nav-link"><i class="fas fa-info-circle"></i> Sobre</a>
+                </div>
+                <div class="user-actions">
+                    <button class="theme-toggle" title="Alternar tema claro/escuro" onclick="toggleTheme()">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <div class="language-selector">
+                        <select id="language">
+                            <option value="pt">PT</option>
+                            <option value="en">EN</option>
+                            <option value="es">ES</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1>AudioSearch Pro</h1>
+            <p class="hero-text">Conheça o melhor buscador de áudios pelo nosso site</p>
+            <div class="hero-buttons">
+                <a href="#search" class="cta-button primary">Começar Busca</a>
+                <a href="#tutorial" class="cta-button secondary">Como Funciona</a>
+            </div>
+        </section>
+
+        <section id="search" class="search-section">
+            <div class="search-container">
+                <div class="search-tabs">
+                    <button class="tab-btn active" data-tab="audio">Áudios</button>
+                    <button class="tab-btn" data-tab="music">Músicas</button>
+                    <button class="tab-btn" data-tab="effects">Efeitos Sonoros</button>
+                </div>
+                <div class="search-input-container">
+                    <input type="text" id="searchInput" placeholder="Buscar áudios..." aria-label="Campo de busca">
+                    <button id="voiceSearchButton" class="voice-search-btn" title="Buscar por voz">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                    <div class="search-filters">
+                        <select id="duration">
+                            <option value="">Duração</option>
+                            <option value="short">Curto (&lt; 1min)</option>
+                            <option value="medium">Médio (1-5min)</option>
+                            <option value="long">Longo (&gt; 5min)</option>
+                        </select>
+                        <select id="quality">
+                            <option value="">Qualidade</option>
+                            <option value="high">Alta (320kbps)</option>
+                            <option value="medium">Média (192kbps)</option>
+                            <option value="low">Baixa (128kbps)</option>
+                        </select>
+                    </div>
+                </div>
+                <button id="searchButton" class="search-btn">
+                    <i class="fas fa-search"></i>
+                    Buscar
+                </button>
+            </div>
+            <div id="results" class="results">
+                <!-- Resultados da busca serão inseridos aqui -->
+            </div>
+        </section>
+
+        <section id="trending" class="trending-section">
+            <h2>Tendências</h2>
+            <div class="trending-tabs">
+                <button class="cta-button trend-tab active" data-trend="daily">Hoje</button>
+                <button class="cta-button trend-tab" data-trend="weekly">Semana</button>
+                <button class="cta-button trend-tab" data-trend="monthly">Mês</button>
+            </div>
+            <div class="trending-grid">
+                <div class="trend-card">
+                    <img src="Images/trending1.jpg" alt="Tendência 1" class="trend-image">
+                    <div class="trend-content">
+                        <h3>Tendência 1</h3>
+                        <p>Descrição breve da tendência 1</p>
+                        <button class="trend-btn">Explorar</button>
+                    </div>
+                </div>
+                <div class="trend-card">
+                    <img src="Images/trending2.jpg" alt="Tendência 2" class="trend-image">
+                    <div class="trend-content">
+                        <h3>Tendência 2</h3>
+                        <p>Descrição breve da tendência 2</p>
+                        <button class="trend-btn">Explorar</button>
+                    </div>
+                </div>
+                <div class="trend-card">
+                    <img src="Images/trending3.jpg" alt="Tendência 3" class="trend-image">
+                    <div class="trend-content">
+                        <h3>Tendência 3</h3>
+                        <p>Descrição breve da tendência 3</p>
+                        <button class="trend-btn">Explorar</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="categories" class="categories-section">
+            <h2>Categorias</h2>
+            <div class="categories-grid">
+                <div class="category-card" data-category="music">
+                    <i class="fas fa-music"></i>
+                    <h3>Músicas</h3>
+                    <p>Encontre suas músicas favoritas</p>
+                </div>
+                <div class="category-card" data-category="podcast">
+                    <i class="fas fa-microphone-alt"></i>
+                    <h3>Podcasts</h3>
+                    <p>Explore podcasts populares</p>
+                </div>
+                <div class="category-card" data-category="effects">
+                    <i class="fas fa-wave-square"></i>
+                    <h3>Efeitos Sonoros</h3>
+                    <p>Biblioteca de efeitos sonoros</p>
+                </div>
+                <div class="category-card" data-category="ambient">
+                    <i class="fas fa-cloud"></i>
+                    <h3>Sons Ambiente</h3>
+                    <p>Sons relaxantes e ambientais</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="features-section">
+            <h2>Recursos</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="fas fa-bolt"></i>
+                    <h3>Busca Rápida</h3>
+                    <p>Encontre áudios em segundos</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-download"></i>
+                    <h3>Download Fácil</h3>
+                    <p>Baixe em diversos formatos</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Conteúdo Seguro</h3>
+                    <p>Áudios verificados e seguros</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-heart"></i>
+                    <h3>Favoritos</h3>
+                    <p>Salve seus áudios preferidos</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="about-section">
+            <h2>Sobre Nós</h2>
+            <div class="about-content">
+                <p>Aqui no AudioSearch Pro você encontrará todos os áudios disponíveis na internet de GRAÇA! O serviço é oferecido a empresas de músicas, cantores, músicos entre outros que buscam por um áudio e não encontram.</p>
+                <div class="team-section">
+                    <h3>Nossa Equipe</h3>
+                    <div class="team-grid">
+                        <div class="team-member">
+                            <img src="Images/team/anderson.png" alt="Anderson Jr" class="team-photo">
+                            <h4>Anderson Jr</h4>
+                            <p>Desenvolvedor Frontend e Backend</p>
+                        </div>
+                        <div class="team-member">
+                            <img src="Images/team/andre.png" alt="André Yuri" class="team-photo">
+                            <h4>André Yuri</h4>
+                            <p>Designer</p>
+                        </div>
+                        <div class="team-member">
+                            <img src="Images/team/breno.png" alt="Breno" class="team-photo">
+                            <h4>Breno</h4>
+                            <p>Estagiário</p>
+                        </div>
+                        <div class="team-member">
+                            <img src="Images/team/luiz.png" alt="Luiz Eduardo" class="team-photo">
+                            <h4>Luiz Eduardo</h4>
+                            <p>Administrador Financeiro</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Links Rápidos</h3>
+                <ul>
+                    <li><a href="#search">Buscar</a></li>
+                    <li><a href="#trending">Tendências</a></li>
+                    <li><a href="#categories">Categorias</a></li>
+                    <li><a href="#about">Sobre</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Redes Sociais</h3>
+                <div class="social-links">
+                    <a href="https://instagram.com/AUTOfinder" target="_blank" title="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://facebook.com/AUTOfinder" target="_blank" title="Facebook">
+                        <i class="fab fa-facebook"></i>
+                    </a>
+                    <a href="https://twitter.com/AUTOfinder" target="_blank" title="Twitter">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Newsletter</h3>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Seu e-mail" required>
+                    <button type="submit">Inscrever</button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 AudioSearch Pro. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <div id="voiceFeedback" class="voice-feedback">
+        <i class="fas fa-microphone"></i>
+        <span>Ouvindo...</span>
+    </div>
+
+    <button id="backToTop" class="back-to-top" title="Voltar ao topo">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script>
+        // Função para alternar entre os temas claro e escuro
+        function toggleTheme() {
+            const body = document.body;
+            const themeToggle = document.querySelector('.theme-toggle i');
+
+            if (body.classList.contains('light-theme')) {
+                body.classList.remove('light-theme');
+                body.classList.add('dark-theme');
+                themeToggle.classList.remove('fa-sun');
+                themeToggle.classList.add('fa-moon');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.classList.remove('dark-theme');
+                body.classList.add('light-theme');
+                themeToggle.classList.remove('fa-moon');
+                themeToggle.classList.add('fa-sun');
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Carrega o tema salvo
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            const body = document.body;
+            const themeToggle = document.querySelector('.theme-toggle i');
+
+            if (savedTheme === 'light') {
+                body.classList.add('light-theme');
+                themeToggle.classList.remove('fa-moon');
+                themeToggle.classList.add('fa-sun');
+            } else {
+                body.classList.add('dark-theme');
+                themeToggle.classList.remove('fa-sun');
+                themeToggle.classList.add('fa-moon');
+            }
+        }
+
+        // Carrega o tema ao iniciar
+        document.addEventListener('DOMContentLoaded', loadTheme);
+    </script>
+
+    <script src="js/search.js"></script>
+    <script src="js/voice.js"></script>
+    <script src="js/trending.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
