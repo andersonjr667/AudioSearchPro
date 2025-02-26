@@ -1,28 +1,32 @@
 const axios = require('axios');
-const OpenAI = require('openai');
-
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY
-});
 
 async function searchWithAI(query) {
     try {
-        // Usar GPT-4 para entender melhor a consulta do usuário
-        const completion = await openai.chat.completions.create({
-            model: "gpt-3.5-turbo",
-            messages: [
-                {
-                    role: "system",
-                    content: "Você é um assistente especializado em encontrar músicas e áudios. Analise a entrada do usuário e extraia informações relevantes como: artista, título, gênero, letra ou trecho da música, humor ou emoção. Retorne apenas as palavras-chave mais relevantes para busca, separadas por vírgula."
-                },
-                {
-                    role: "user",
-                    content: query
+        // Usar Groq para entender melhor a consulta do usuário
+        const completion = await axios.post(
+            "https://api.groq.com/v1/chat/completions",
+            {
+                model: "llama3-8b-8192",
+                messages: [
+                    {
+                        role: "system",
+                        content: "Você é um assistente especializado em encontrar músicas e áudios. Analise a entrada do usuário e extraia informações relevantes como: artista, título, gênero, letra ou trecho da música, humor ou emoção. Retorne apenas as palavras-chave mais relevantes para busca, separadas por vírgula."
+                    },
+                    {
+                        role: "user",
+                        content: query
+                    }
+                ]
+            },
+            {
+                headers: {
+                    "Authorization": `Bearer ${process.env.GROQ_API_KEY}`,
+                    "Content-Type": "application/json"
                 }
-            ]
-        });
+            }
+        );
 
-        const keywords = completion.choices[0].message.content;
+        const keywords = completion.data.choices[0].message.content;
 
         // Buscar em múltiplas fontes incluindo YouTube
         const [youtubeResults, soundcloudResults, freesoundResults, archiveResults] = await Promise.all([
