@@ -26,6 +26,10 @@ async function searchWithAI(query) {
             }
         );
 
+        if (!completion.data || !completion.data.choices) {
+            throw new Error('Resposta inválida da API do Groq');
+        }
+
         const keywords = completion.data.choices[0].message.content;
 
         // Buscar em múltiplas fontes incluindo YouTube
@@ -46,7 +50,7 @@ async function searchWithAI(query) {
 
         return combinedResults;
     } catch (error) {
-        console.error('Erro na busca com IA:', error);
+        console.error('Erro na busca com IA:', error.response ? error.response.data : error.message);
         throw error;
     }
 }
