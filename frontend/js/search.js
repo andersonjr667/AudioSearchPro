@@ -52,6 +52,13 @@ async function performSearch() {
         // Log para depuração
         console.log('Resposta da API:', data);
 
+        // Verificar se os dados estão no formato esperado
+        if (!Array.isArray(data)) {
+            console.error('Dados inválidos retornados pela API:', data);
+            resultsContainer.innerHTML = '<div class="error">Erro: Dados inválidos retornados pela API.</div>';
+            return;
+        }
+
         displayResults(data);
     } catch (error) {
         console.error('Erro ao buscar resultados:', error);

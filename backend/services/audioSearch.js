@@ -37,9 +37,14 @@ async function searchWithAI(query) {
         ]);
 
         // Combinar e filtrar resultados
-        return [...youtubeResults, ...soundcloudResults, ...freesoundResults, ...archiveResults]
+        const combinedResults = [...youtubeResults, ...soundcloudResults, ...freesoundResults, ...archiveResults]
             .filter(result => result !== null)
             .slice(0, 15);
+
+        // Log para depuração
+        console.log('Resultados combinados:', combinedResults);
+
+        return combinedResults;
     } catch (error) {
         console.error('Erro na busca com IA:', error);
         throw error;
