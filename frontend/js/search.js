@@ -48,15 +48,19 @@ async function performSearch() {
         // Simulação de chamada API
         const response = await fetch(`/api/search?q=${encodeURIComponent(query)}&type=${currentTab}&duration=${durationFilter.value}&quality=${qualityFilter.value}`);
         const data = await response.json();
-        
+
+        // Log para depuração
+        console.log('Resposta da API:', data);
+
         displayResults(data);
     } catch (error) {
+        console.error('Erro ao buscar resultados:', error);
         resultsContainer.innerHTML = '<div class="error">Erro ao buscar resultados. Tente novamente.</div>';
     }
 }
 
 function displayResults(results) {
-    if (!results.length) {
+    if (!results || !results.length) {
         resultsContainer.innerHTML = '<div class="no-results">Nenhum resultado encontrado</div>';
         return;
     }

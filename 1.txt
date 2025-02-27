@@ -1,0 +1,4 @@
+git status
+git add .  
+git commit -m "melhora sistema de busca"
+git push origin main

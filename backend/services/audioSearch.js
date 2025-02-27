@@ -74,6 +74,7 @@ async function searchYouTube(query) {
                 const viewCount = details.data.items[0].statistics.viewCount;
 
                 return {
+                    id: video.id.videoId,
                     title: video.snippet.title,
                     description: video.snippet.description,
                     url: `https://www.youtube.com/watch?v=${video.id.videoId}`,
@@ -109,11 +110,12 @@ async function searchSoundCloud(query) {
         });
 
         return response.data.map(track => ({
+            id: track.id,
             title: track.title,
             description: track.description || '',
             url: track.permalink_url,
             source: 'SoundCloud',
-            thumbnail: track.artwork_url,
+            thumbnail: track.artwork_url || 'https://via.placeholder.com/150',
             duration: track.duration,
             artist: track.user.username
         }));
@@ -135,6 +137,7 @@ async function searchFreesound(query) {
         });
 
         return response.data.results.map(sound => ({
+            id: sound.id,
             title: sound.name,
             description: sound.description,
             url: sound.url,
@@ -159,6 +162,7 @@ async function searchInternetArchive(query) {
         });
 
         return response.data.response.docs.map(item => ({
+            id: item.identifier,
             title: item.title,
             description: item.description || '',
             url: `https://archive.org/details/${item.identifier}`,
